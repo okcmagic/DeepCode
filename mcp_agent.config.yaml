@@ -1,10 +1,12 @@
 $schema: ./schema/mcp-agent.config.schema.json
-anthropic: null
 default_search_server: brave
 document_segmentation:
   enabled: true
   size_threshold_chars: 50000
 execution_engine: asyncio
+google_gemini:
+  default_model: gemini-1.5-flash
+  max_tokens: 8192
 logger:
   level: info
   path_settings:
@@ -83,9 +85,4 @@ mcp:
       command: python
       env:
         PYTHONPATH: .
-openai:
-  base_max_tokens: 16384
-  default_model: anthropic/claude-3.5-sonnet
-  max_tokens_policy: adaptive
-  retry_max_tokens: 32768
 planning_mode: traditional

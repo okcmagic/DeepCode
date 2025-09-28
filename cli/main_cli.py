@@ -21,6 +21,25 @@ parent_dir = os.path.dirname(current_dir)
 if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 
+##############################################################################
+# Monkey-patching to migrate to Google Gemini
+##############################################################################
+# We are replacing the OpenAI and Anthropic LLM classes with our Gemini
+# implementation at runtime. This is necessary because the `mcp-agent`
+# package is an external dependency and we cannot modify its source code.
+# This approach ensures that all parts of the application that import the
+# old LLM classes will transparently use the Gemini implementation instead.
+from utils.gemini_llm import GeminiAugmentedLLM
+import mcp_agent.workflows.llm.augmented_llm_openai as openai_llm
+import mcp_agent.workflows.llm.augmented_llm_anthropic as anthropic_llm
+
+# Replace the classes in the modules with our Gemini implementation
+openai_llm.OpenAIAugmentedLLM = GeminiAugmentedLLM
+anthropic_llm.AnthropicAugmentedLLM = GeminiAugmentedLLM
+##############################################################################
+# End of monkey-patching
+##############################################################################
+
 # 导入CLI应用
 from cli.cli_app import CLIApp, Colors
 
